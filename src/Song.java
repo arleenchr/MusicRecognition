@@ -1,5 +1,7 @@
+import java.util.Comparator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 public class Song {
     private List<Note> song;
@@ -11,7 +13,7 @@ public class Song {
         this.song = song;
     }
 
-    public boolean ContainsNote(Note note){
+    public boolean containsNote(Note note){
         return song.contains(note);
     }
 
@@ -19,22 +21,35 @@ public class Song {
         return song.get(idx);
     }
 
-    public void AddNote(Note note){
+    public void addNote(Note note){
         song.add(note);
         song.sort((s1,s2)
                 -> s1.getStart().compareTo(
                         s2.getStart()));
     }
 
-    public void RemoveNote(Note note){
+    public void removeNote(Note note){
         song.remove(note);
     }
 
-    public void RemoveNote(int idx){
+    public void removeNote(int idx){
         song.remove(idx);
     }
 
-    public void PrintSong(){
+    public Double findMinimumDurationGrouping(){
+        Double min = song.stream()
+                .min(Comparator.comparing(Note::getDuration))
+                .orElseThrow(NoSuchElementException::new)
+                .getDuration();
+        for (Note note : song) {
+            if (note.getDuration() % min > 0 && note.getDuration() % min < min){
+                min = note.getDuration() % min;
+            }
+        }
+        return min;
+    }
+
+    public void printSong(){
         System.out.println("(start, duration, pitch)");
         for (Note note: song) {
             System.out.println(String.format("(%.2f, %.2f, %.2f)", note.getStart(), note.getDuration(), note.getPitch()));
