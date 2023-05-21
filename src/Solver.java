@@ -1,133 +1,98 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Class Solver represents the Solver of the Music Recognition
- *
- * @mainSong the song to be checked
- * @patternSong the pattern to be compared with the mainSong
+ * Class Solver represents the main solver program for the music recognition
+ * @songDatabase the list of songs on the program's database
+ * @songToBeMatched the song from user to be matched with every songs on the songDatabase
  */
-public class Solver implements IBoyerMoore {
+public class Solver {
     /* attributes */
-    private Song mainSong;
-    private Song patternSong;
+    private List<Song> songDatabase;
+    private Song songToBeMatched;
 
     /* constructor */
-    public Solver(Song mainSong, Song patternSong){
-        this.mainSong = mainSong;
-        this.patternSong = patternSong;
+    public Solver(Song songToBeMatched){
+        this.songDatabase = new ArrayList<Song>();
+        this.songToBeMatched = songToBeMatched;
+    }
+    public Solver(List<Song> songDatabase, Song songToBeMatched){
+        this.songDatabase = songDatabase;
+        this.songToBeMatched = songToBeMatched;
     }
 
     /* getter and setter */
-    public Song getMainSong(){
-        return mainSong;
+    public List<Song> getSongDatabase(){
+        return songDatabase;
     }
-    public Song getPatternSong(){
-        return patternSong;
+    public Song getSongToBeMatched(){
+        return songToBeMatched;
     }
-    public void setMainSong(Song mainSong){
-        this.mainSong = mainSong;
+    public Song getSongDatabaseIdx(int idx){
+        return songDatabase.get(idx);
     }
-    public void setPatternSong(Song patternSong){
-        this.patternSong = patternSong;
+    public void setSongDatabase(List<Song> songDatabase){
+        this.songDatabase = songDatabase;
+    }
+    public void setSongToBeMatched(Song songToBeMatched){
+        this.songToBeMatched = songToBeMatched;
     }
 
     /* other methods */
     /**
-     * Method findMinimumDurationGrouping to get the minimum duration grouping of the main song and the pattern song
-     * @return the value of the minimum duration grouping
+     * Method containsSongDatabase to check whether a song/piece exists in the songDatabase
+     * @param song the song/piece to be checked
+     * @return true if the database contains the song/piece,
+     * false if the database does not contain the song/piece
      */
-    public Double findMinimumDurationGrouping(){
-        return (mainSong.findMinimumDurationGrouping() < patternSong.findMinimumDurationGrouping()) ?
-                mainSong.findMinimumDurationGrouping() : patternSong.findMinimumDurationGrouping();
+    public boolean containsSongDatabase(Song song){
+        return songDatabase.contains(song);
     }
 
     /**
-     * Method mainSongToString to convert the mainSong to a string,
-     * according to the value of minimum duration grouping between the mainSong and the patternSong
-     * The String represented by the notes' pitch, separated by a space ' '
-     * @return a string represents the mainSong
+     * Method addSongDatabase to add a song/piece to the database
+     * @param song the song to be inserted to the database
      */
-    public String mainSongToString(){
-        return mainSong.toString(findMinimumDurationGrouping());
+    public void addSongDatabase(Song song){
+        songDatabase.add(song);
     }
 
     /**
-     * Method patternSongToString to convert the patternSong to a string,
-     * according to the value of minimum duration grouping between the mainSong and the patternSong
-     * The String represented by the notes' pitch, separated by a space ' '
-     * @return a string represents the patternSong
+     * Method removeSongDatabase to remove a song/piece from the database
+     * @param song the song/piece to be removed
      */
-    public String patternSongToString(){
-        return patternSong.toString(findMinimumDurationGrouping());
+    public void removeSongDatabase(Song song){
+        songDatabase.remove(song);
     }
 
-    /* Boyer-Moore Algorithm */
+    /**
+     * Method removeSongDatabase to remove a song/piece from the database by its index in the database list
+     * @param idx the index of the song/piece to be removed
+     */
+    public void removeSongDatabase(int idx){
+        songDatabase.remove(idx);
+    }
+
+    /* search matched songs method */
 
     /**
-     * Methods boyerMooreMatch to find the index where the patternSong matches in the mainSong
-     * Pattern matching Boyer Moore Algorithm
-     * @return index where the patternSong starts in the mainSong (if pattern not found, returns -1)
+     * Method findMatch to find all the matching songs/pieces in the database.
+     * A song/piece defined as matched if the song/piece contains the pattern of the song in the database,
+     * or if the similarity percentage is above 75%.
+     * @return a list of songs match the songToBeMatched
      */
-    public int boyerMooreMatch(){
-        String[] mainSongArr = mainSongToString().split(" ");
-        String[] patternSongArr = patternSongToString().split(" ");
-        Map<String, Integer> lastOccurence = lastOccurence(mainSongArr, patternSongArr);
-
-        int n = mainSongArr.length;
-        int m = patternSongArr.length;
-        int i = m-1;
-        if (i > n-1){
-            return -1;
-        }
-        int j = m-1;
-        do {
-            if (patternSongArr[j].equals(mainSongArr[i])){
-                if (j==0){
-                    return i; // matches
+    public List<Song> findMatch(){
+        List<Song> matchedSongs = new ArrayList<Song>();
+        for (Song songDB: songDatabase) {
+            Matcher matcher = new Matcher(songToBeMatched, songDB);
+            if (matcher.boyerMooreMatch() != -1){
+                matchedSongs.add(songDB);
+            } else {
+                if (matcher.calcSimilarityPercentage() >= 0.75){
+                    matchedSongs.add(songDB);
                 }
-                i--;
-                j--;
-            } else {
-                int last = lastOccurence.get(mainSongArr[i]);
-                i += m - Math.min(j, 1+last);
-                j = m-1;
-            }
-        } while (i<=n-1);
-        return -1;
-    }
-
-    /**
-     * Method lastOccurence to create a map to find the last occurence of a note in the patternSong.
-     * For each notes in the mainSong, search for its last occurence in the patternSong.
-     * @param mainSongArr the mainSong (array of String)
-     * @param patternSongArr the patternSong (array of String)
-     * @return the Map with the pitch (String) as the key and the last index occurence as the value
-     */
-    public Map<String, Integer> lastOccurence(String[] mainSongArr, String[] patternSongArr){
-        Map<String, Integer> last = new HashMap<String, Integer>();
-        for (String note : mainSongArr){
-            if (!last.containsKey(note)){
-                last.put(note, searchLastIdx(note, patternSongArr));
             }
         }
-        return last;
-    }
-
-    /**
-     * Method searchLastIndex to search the last index of an element exists in the patternSong
-     * @param note the note to be searched in the patternSong array
-     * @param patternSongArr the patternSong
-     * @return the last index of the note in the patternSong (returns -1 if not found)
-     */
-    public int searchLastIdx(String note, String[] patternSongArr){
-        int idx = patternSongArr.length;
-        while (idx>=0){
-            if (patternSongArr[idx].equals(note)){
-                return idx;
-            } else {
-                idx--;
-            }
-        }
-        return -1;
+        return matchedSongs;
     }
 }
