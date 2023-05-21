@@ -43,10 +43,13 @@ public class Main {
         Double similarity = Double.valueOf(5 - levenstheinval) / Double.valueOf(5);
         System.out.println(String.format("levensthein value = %d, similarity = %.2f", levenstheinval, similarity));*/
 
-        Note A = new Note(0.,1.,440.);
-        System.out.println(A.getPitch());
-        A.transpose(-2);
-        System.out.println(A.getPitch());
+        //Note A = new Note(0.,1.,440.);
+        //System.out.println(A.getPitch());
+
+        //Note B = new Note(0.,1.,493.88);
+        //System.out.println(A.calcNumTranspose(B));
+        //A.transpose(-2);
+        //System.out.println(A.getPitch());
 
         Solver solver = new Solver(cinemaParadiso);
         solver.addSongDatabase(patternCinemaParadiso);

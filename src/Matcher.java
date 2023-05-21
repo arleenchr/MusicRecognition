@@ -81,7 +81,8 @@ public class Matcher implements IBoyerMoore, ILevensthein {
         }
         int j = m-1;
         do {
-            if (patternSongArr[j].equals(mainSongArr[i])){
+            if (patternSongArr[j].equals(mainSongArr[i]) ||
+                    Math.abs(Double.parseDouble(mainSongArr[i]) - Double.parseDouble(patternSongArr[j])) / Double.parseDouble(patternSongArr[j]) >= 0.75){
                 if (j==0){
                     return i; // matches
                 }
@@ -176,7 +177,6 @@ public class Matcher implements IBoyerMoore, ILevensthein {
         int levenstheinValue = levensthein(mainSongArr, patternSongArr);
         Double similarity = 0.;
         int maxLength = Math.max(mainSongArr.length, patternSongArr.length);
-        System.out.println(String.format("levensthein = %d, maxLength = %d",levenstheinValue, maxLength));
         if (maxLength != 0){
             similarity = Double.valueOf(maxLength - levenstheinValue) / Double.valueOf(maxLength);
         } else {

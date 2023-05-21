@@ -59,4 +59,18 @@ public class Note {
     public void transpose(int numTranspose){
         pitch *= Math.pow(2., (Double.valueOf(numTranspose) / 12.));
     }
+
+    /**
+     * Method calcNumTranspose to calculate the number required to transpose this note to another note.
+     * Calculation based on how to calculate pitch and frequency.
+     * frequency = base_frequency * 2^(interval_from_base / 12),
+     * so that interval_from_base = -12 * log(frequency / base_frequency) / log(2).
+     * frequency is this note's pitch,
+     * base_frequency is the another note's pitch.
+     * @param note another note to be transposed into
+     * @return the value of the number transpose [...,-2,-1,0,1,2,...]
+     */
+    public int calcNumTranspose(Note note){
+        return (int) Math.round(-12 * (Math.log(this.pitch / note.pitch) / Math.log(2)));
+    }
 }
