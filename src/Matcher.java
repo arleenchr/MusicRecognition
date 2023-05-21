@@ -120,7 +120,7 @@ public class Matcher implements IBoyerMoore, ILevensthein {
      * @return the last index of the note in the patternSong (returns -1 if not found)
      */
     public int searchLastIdx(String note, String[] patternSongArr){
-        int idx = patternSongArr.length;
+        int idx = patternSongArr.length-1;
         while (idx>=0){
             if (patternSongArr[idx].equals(note)){
                 return idx;
@@ -141,6 +141,7 @@ public class Matcher implements IBoyerMoore, ILevensthein {
         int mainSongLength = mainSongArr.length;
         int patternSongLength = patternSongArr.length;
         int[][] levenstheinMatrix = new int[mainSongLength+1][patternSongLength+1];
+        Arrays.stream(levenstheinMatrix).forEach(elmt -> Arrays.fill(elmt, 0));
 
         for (int i=1; i<=mainSongLength; i++){
             levenstheinMatrix[i][0] = i;
@@ -151,7 +152,8 @@ public class Matcher implements IBoyerMoore, ILevensthein {
 
         for (int i=1; i<=mainSongLength; i++){
             for (int j=1; j<=patternSongLength; j++){
-                if (mainSongArr[i-1] == patternSongArr[j-1]){
+                if (mainSongArr[i-1] == patternSongArr[j-1] ||
+                        Math.abs(Double.parseDouble(mainSongArr[i-1]) - Double.parseDouble(patternSongArr[j-1])) / Double.parseDouble(patternSongArr[j-1]) >= 0.75){
                     levenstheinMatrix[i][j] = levenstheinMatrix[i-1][j-1];
                 } else {
                     levenstheinMatrix[i][j] = Math.min(levenstheinMatrix[i-1][j-1], Math.min(levenstheinMatrix[i-1][j], levenstheinMatrix[i][j-1])) + 1;
@@ -174,8 +176,9 @@ public class Matcher implements IBoyerMoore, ILevensthein {
         int levenstheinValue = levensthein(mainSongArr, patternSongArr);
         Double similarity = 0.;
         int maxLength = Math.max(mainSongArr.length, patternSongArr.length);
+        System.out.println(String.format("levensthein = %d, maxLength = %d",levenstheinValue, maxLength));
         if (maxLength != 0){
-            similarity = (Double.valueOf(maxLength - levenstheinValue)) / maxLength;
+            similarity = Double.valueOf(maxLength - levenstheinValue) / Double.valueOf(maxLength);
         } else {
             similarity = 1.;
         }

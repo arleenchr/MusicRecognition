@@ -112,11 +112,21 @@ public class Song {
         StringBuilder songStr = new StringBuilder();
         for (Note note : notes){
             for (int i = 0; i < note.getDuration()/minimumDurationGrouping; i++){
-                songStr.append(String.format("%.1f ",note.getPitch()));
+                songStr.append(String.format("%.1f ",note.getPitch()).toString());
             }
         }
         songStr.deleteCharAt(songStr.length()-1); // remove last whitespace
         return songStr.toString();
+    }
+
+    /**
+     * Method transpose to transpose all notes in the song by a value of an interval number
+     * @param numTranspose value of an interval number [...,-2,-1,0,1,2,...]
+     */
+    public void transpose(int numTranspose){
+        for (Note note : notes){
+            note.transpose(numTranspose);
+        }
     }
 
     /**

@@ -46,4 +46,17 @@ public class Note {
     public void setPitch(Double pitch){
         this.pitch = pitch;
     }
+
+    /* other methods */
+    /**
+     * Method transpose to transpose a note by a value of an interval number
+     * Calculation based on how to calculate pitch and frequency.
+     * frequency = base_frequency * 2^(interval_from_base / 12)
+     * In this program, A (440 Hz) used as the base frequency
+     * e.g.: A (440 Hz) transposed by +2 will result B (440 * 2^(2/12) = 493.88 Hz)
+     * @param numTranspose value of an interval number [...,-2,-1,0,1,2,...]
+     */
+    public void transpose(int numTranspose){
+        pitch *= Math.pow(2., (Double.valueOf(numTranspose) / 12.));
+    }
 }

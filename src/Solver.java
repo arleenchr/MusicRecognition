@@ -88,6 +88,7 @@ public class Solver {
             if (matcher.boyerMooreMatch() != -1){
                 matchedSongs.add(songDB);
             } else {
+                System.out.println(matcher.calcSimilarityPercentage());
                 if (matcher.calcSimilarityPercentage() >= 0.75){
                     matchedSongs.add(songDB);
                 }
