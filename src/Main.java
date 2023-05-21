@@ -1,8 +1,9 @@
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) {
-        Song patternCinemaParadiso = new Song();
+    public static Solver initSolver(){
+        /* Database song 1: Love Theme from Cinema Paradiso */
+        Song patternCinemaParadiso = new Song("Love Theme from Cinema Paradiso");
         patternCinemaParadiso.addNote(new Note(1.,1.5,466.2));      //Bb
         patternCinemaParadiso.addNote(new Note(2.5,0.5,293.6));     //D
         patternCinemaParadiso.addNote(new Note(3.,0.5,311.2));      //Eb
@@ -16,6 +17,26 @@ public class Main {
         patternCinemaParadiso.addNote(new Note(7., 1., 311.2));     //Eb
         patternCinemaParadiso.addNote(new Note(8.,1.5, 293.6));     //D
 
+        /* Database song 2: Salut d'Amour */
+        Song patternSalutdAmour = new Song("Salut d'Amour");
+        patternSalutdAmour.addNote(new Note(1.,1.,830.61));         //G#
+        patternSalutdAmour.addNote(new Note(2.,0.5,493.88));        //B
+        patternSalutdAmour.addNote(new Note(2.5,0.5,830.61));       //G#
+        patternSalutdAmour.addNote(new Note(3.,0.5,739.99));        //F#
+        patternSalutdAmour.addNote(new Note(3.5,0.5,659.25));       //E
+        patternSalutdAmour.addNote(new Note(4.,0.5,622.25));        //D#
+        patternSalutdAmour.addNote(new Note(4.5,0.5,659.25));       //E
+        patternSalutdAmour.addNote(new Note(5.,1.,880.));           //A
+        patternSalutdAmour.addNote(new Note(6.,1.,880.));           //A
+        patternSalutdAmour.addNote(new Note(7.,1.,880.));           //A
+        patternSalutdAmour.addNote(new Note(8.,1.,493.88));         //B
+
+        Solver solver = new Solver();
+        solver.addSongDatabase(patternCinemaParadiso);
+        solver.addSongDatabase(patternSalutdAmour);
+        return solver;
+    }
+    public static void main(String[] args) {
         Song cinemaParadiso = new Song();
         cinemaParadiso.addNote(new Note(1.,2., 262.6));         //C
         cinemaParadiso.addNote(new Note(3.,1., 246.9));         //Bb
@@ -36,23 +57,8 @@ public class Main {
         cinemaParadiso.addNote(new Note(11., 1., 311.2));       //Eb
         cinemaParadiso.addNote(new Note(12.,1.5, 293.6));       //D
 
-        /*Matcher matcher = new Matcher(cinemaParadiso, patternCinemaParadiso);
-        String[] s1 = {"j","o","h","n"};
-        String[] s2 = {"j","o","n","n","y"};
-        int levenstheinval = matcher.levensthein(s1,s2);
-        Double similarity = Double.valueOf(5 - levenstheinval) / Double.valueOf(5);
-        System.out.println(String.format("levensthein value = %d, similarity = %.2f", levenstheinval, similarity));*/
-
-        //Note A = new Note(0.,1.,440.);
-        //System.out.println(A.getPitch());
-
-        //Note B = new Note(0.,1.,493.88);
-        //System.out.println(A.calcNumTranspose(B));
-        //A.transpose(-2);
-        //System.out.println(A.getPitch());
-
-        Solver solver = new Solver(cinemaParadiso);
-        solver.addSongDatabase(patternCinemaParadiso);
+        Solver solver = initSolver();
+        solver.setSongToBeMatched(cinemaParadiso);
         List<Song> matchCinemaParadiso = solver.findMatch();
         for (Song match : matchCinemaParadiso){
             match.printSong();

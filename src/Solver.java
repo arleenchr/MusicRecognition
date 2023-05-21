@@ -12,6 +12,10 @@ public class Solver {
     private Song songToBeMatched;
 
     /* constructor */
+    public Solver(){
+        this.songDatabase = new ArrayList<Song>();
+        this.songToBeMatched = new Song();
+    }
     public Solver(Song songToBeMatched){
         this.songDatabase = new ArrayList<Song>();
         this.songToBeMatched = songToBeMatched;

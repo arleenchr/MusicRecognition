@@ -10,13 +10,20 @@ import java.util.NoSuchElementException;
  */
 public class Song {
     /* attributes */
+    private String title;
     private List<Note> notes;
 
     /* constructor */
     public Song(){
-        notes = new ArrayList<>();
+        title = "";
+        notes = new ArrayList<Note>();
     }
-    public Song(List<Note> notes){
+    public Song(String title){
+        this.title = title;
+        this.notes = new ArrayList<Note>();
+    }
+    public Song(String title, List<Note> notes){
+        this.title = title;
         this.notes = notes;
     }
 
@@ -141,6 +148,7 @@ public class Song {
      * (4.50, 0.50, 392.0)
      */
     public void printSong(){
+        System.out.println(title);
         System.out.println("(start, duration, pitch)");
         for (Note note : notes) {
             System.out.println(String.format("(%.2f, %.2f, %.1f)", note.getStart(), note.getDuration(), note.getPitch()));
