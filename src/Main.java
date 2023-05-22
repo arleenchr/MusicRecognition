@@ -46,14 +46,14 @@ public class Main {
         while (!isInputValid){
             System.out.println("Please input the song you want to search!");
             System.out.println("<start> <duration> <pitch>");
-            System.out.println("Input -1. to stop");
+            System.out.println("Input -1 to stop");
 
             String note = "";
             notes.clear();
             do {
                 Scanner inputScan = new Scanner(System.in);
                 note = inputScan.nextLine();
-                if (note.equals("-1.")){
+                if (note.equals("-1")){
                     isInputValid = true;
                     break;
                 }
@@ -68,7 +68,7 @@ public class Main {
                     break;
                 }
                 notes.add(new Note(start, duration, pitch));
-            } while (!note.equals("-1."));
+            } while (!note.equals("-1"));
         }
 
         inputSong.setNotes(notes);
