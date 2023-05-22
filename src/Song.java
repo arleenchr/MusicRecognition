@@ -28,11 +28,17 @@ public class Song {
     }
 
     /* getter and setter */
+    public String getTitle(){
+        return title;
+    }
     public List<Note> getNotes(){
         return notes;
     }
     public Note getNote(int idx){
         return notes.get(idx);
+    }
+    public void setTitle(String title){
+        this.title = title;
     }
     public void setNotes(List<Note> notes){
         this.notes = notes;

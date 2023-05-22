@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
     public static Solver initSolver(){
@@ -37,31 +39,52 @@ public class Main {
         return solver;
     }
     public static void main(String[] args) {
-        Song cinemaParadiso = new Song();
-        cinemaParadiso.addNote(new Note(1.,2., 262.6));         //C
-        cinemaParadiso.addNote(new Note(3.,1., 246.9));         //Bb
-        cinemaParadiso.addNote(new Note(4.,0.25, 246.9));       //Bb
-        cinemaParadiso.addNote(new Note(4.25,0.25, 293.6));     //D
-        cinemaParadiso.addNote(new Note(4.5,0.25, 698.5));      //F
-        cinemaParadiso.addNote(new Note(4.75,0.25, 440.));      //A
-        cinemaParadiso.addNote(new Note(5.,1.5,466.2));         //Bb
-        cinemaParadiso.addNote(new Note(6.5,0.5,293.6));        //D
-        cinemaParadiso.addNote(new Note(7.,0.5,311.2));         //Eb
-        cinemaParadiso.addNote(new Note(7.5,0.5,466.2));        //Bb
-        cinemaParadiso.addNote(new Note(8.,0.5,440.));          //A
-        cinemaParadiso.addNote(new Note(8.5,0.5,392.));         //G
-        cinemaParadiso.addNote(new Note(9.,0.5,440.));          //A
-        cinemaParadiso.addNote(new Note(9.5, 0.5, 523.2));      //C
-        cinemaParadiso.addNote(new Note(10., 0.75, 698.5));     //F
-        cinemaParadiso.addNote(new Note(10.75, 0.25, 311.2));   //Eb
-        cinemaParadiso.addNote(new Note(11., 1., 311.2));       //Eb
-        cinemaParadiso.addNote(new Note(12.,1.5, 293.6));       //D
+        Song inputSong = new Song();
+        boolean isInputValid = false;
+        List<Note> notes = new ArrayList<Note>();
 
-        Solver solver = initSolver();
-        solver.setSongToBeMatched(cinemaParadiso);
-        List<Song> matchCinemaParadiso = solver.findMatch();
-        for (Song match : matchCinemaParadiso){
-            match.printSong();
+        while (!isInputValid){
+            System.out.println("Please input the song you want to search!");
+            System.out.println("<start> <duration> <pitch>");
+            System.out.println("Input -1. to stop");
+
+            String note = "";
+            notes.clear();
+            do {
+                Scanner inputScan = new Scanner(System.in);
+                note = inputScan.nextLine();
+                if (note.equals("-1.")){
+                    isInputValid = true;
+                    break;
+                }
+                String[] noteComponent = note.split(" ");
+                if (noteComponent.length != 3){
+                    break;
+                }
+                Double start = Double.parseDouble(noteComponent[0]);
+                Double duration = Double.parseDouble(noteComponent[1]);
+                Double pitch = Double.parseDouble(noteComponent[2]);
+                if (start<1. || duration<0. || pitch<0.){
+                    break;
+                }
+                notes.add(new Note(start, duration, pitch));
+            } while (!note.equals("-1."));
+        }
+
+        inputSong.setNotes(notes);
+
+        if (notes.size() > 0){
+            Solver solver = initSolver();
+            solver.setSongToBeMatched(inputSong);
+            List<Song> matchInputSong = solver.findMatch();
+            if (matchInputSong.size()>0){
+                System.out.println(String.format("%d matches found!", matchInputSong.size()));
+                for (Song match : matchInputSong){
+                    System.out.println(match.getTitle());
+                }
+            } else {
+                System.out.println("No matches found!");
+            }
         }
     }
 }
