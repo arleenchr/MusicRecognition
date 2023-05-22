@@ -14,14 +14,20 @@ Music Recognition is a simple monophonic music recognition. The program implemen
 
 ## How to Use
 ## Cloning Repository
-```git clone https://github.com/arleenchr/MusicRecognition.git```
+```
+git clone https://github.com/arleenchr/MusicRecognition.git
+```
 
 ### Compiling Program
-Open terminal on the repository root directory
-```javac -d ./out/ ./src/*.java```
+Open terminal on the repository root directory.
+```
+javac -d ./out/ ./src/*.java
+```
 This command will compile all of the Java classes into folder `out`
 
 ### Running Program
 Make sure that `Main.class` exists on folder `out`. If the `Main.class` has not existed yet, compile the program first.
 Open terminal on the `out` folder directory
-```java Main```
+```
+java Main
+```
